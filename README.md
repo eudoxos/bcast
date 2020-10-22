@@ -5,7 +5,7 @@ This code is a MWE of discovery via broadcast, as used in [Aravis](https://githu
 
 `make build` will compile both native and wine versions, provided you have [crossroad](https://pypi.org/project/crossroad/) installed (run `pip3 install crossroad` if not).
 
-`make run` will run the program both natively and through wine. Typically, you will see this (shortened):
+`make run` will run the program both natively and through wine (adjust your interface IP address in `Makefile` and `cross-run.sh`). Typically, you will see this (shortened):
 
 ```
 =========== NATIVE ==============
