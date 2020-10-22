@@ -2,8 +2,6 @@
 #include <glib/gprintf.h>
 #include <gio/gnetworking.h>
 
-const int listen_port=3956;
-
 /* there is bunch of leaks in here, I know */
 int main(int argc, char** argv){
 	// address is localhost by default
