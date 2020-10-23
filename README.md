@@ -1,7 +1,9 @@
 Receiving UDP packet with GLib
 ===============================
 
-This code is a MWE of receiving UDP packets as used in [Aravis](https://github.com/AravisProject/aravis). It currently works under Linux but fails to receive packets under Windows (with mingw32-w64). The failure happens both in Wine and in true Windows.
+The `listener-glib` is a MWE of receiving UDP packets (as used in [Aravis](https://github.com/AravisProject/aravis)) via GLib's `g_poll`. It currently works under Linux but fails to receive packets under Windows (with mingw32-w64). The failure happens both in Wine and in true Windows and is related to `g_poll` which behaves (somewhat mysteriously) differently under Linux and under Windows.
+
+There is also win32-API version `listener-win32` which is functional under wine, for comparison.
 
 `make build` will compile both native and wine versions, provided you have [crossroad](https://pypi.org/project/crossroad/) installed (run `pip3 install crossroad` if not).
 
@@ -11,13 +13,18 @@ Typically, you will see this (shortened):
 
 ```
 =========== NATIVE ==============
-build-native/broad
-Bound to 127.0.0.1:10001
+build-native/listen-glib
+Bound to 127.0.0.1:3956
 Received 8 bytes from 127.0.0.1.
-=========== WINE ==============
+[...]
+==== WINE: WINSOCK2 NATIVE ====
+Bound to 127.0.0.1: 3956
+Received 8 bytes
+[...]
+========= WINE: GLIB ==========
 Bound to 127.0.0.1:3956
 
-** (process:15): CRITICAL **: 19:17:39.904: g_poll timed out.
+** (process:8): CRITICAL **: 08:28:29.816: g_poll timed out.
 ```
 
 If you can fix this, you will receive immense gratitude.

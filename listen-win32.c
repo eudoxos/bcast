@@ -38,13 +38,13 @@ int main(int argc,char** argv){
 	fprintf(stderr,"Bound to %s: %d\n",inet_ntoa(service[0].sin_addr),ntohs(service[0].sin_port));
 
 	char data[256];
-	int bytes, waitRet;
+	int bytes;
 
 	WSAEVENT hEvent=WSACreateEvent();
 	WSANETWORKEVENTS events;
 	WSAEventSelect(*m_socket,hEvent,FD_READ | FD_WRITE);
-	waitRet=WSAWaitForMultipleEvents(1,&hEvent,FALSE,30000,FALSE);
-	/* waitRet not handled */
+	/* return value ignored */
+	WSAWaitForMultipleEvents(1,&hEvent,FALSE,30000,FALSE);
 	while(1){
 		if(WSAEnumNetworkEvents(*m_socket,hEvent,&events) == SOCKET_ERROR) {
 			fprintf(stderr,"Error");

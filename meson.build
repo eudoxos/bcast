@@ -11,4 +11,7 @@ if host_machine.system()=='windows'
 		cc.find_library('iphlpapi', required: true) # GetAdaptersAddresses
 	]
 endif
-executable('broad','broad.c',dependencies: deps)
+executable('listen-glib','listen-glib.c',dependencies: deps)
+if host_machine.system()=='windows'
+	executable('listen-win32','listen-win32.c',dependencies: deps)
+endif
