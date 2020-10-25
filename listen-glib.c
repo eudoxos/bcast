@@ -1,6 +1,11 @@
 #include <gio/gio.h>
 #include <glib/gprintf.h>
 #include <gio/gnetworking.h>
+#include <glib/gmain.h>
+
+#ifdef G_OS_WIN32
+#include "gpoll_local.h"
+#endif
 
 /* there is bunch of leaks in here, I know */
 int main(int argc, char** argv){
@@ -8,6 +13,12 @@ int main(int argc, char** argv){
 	char* addr_str=argc>1?argv[1]:"127.0.0.1";
 	int listen_port=argc>2?atoi(argv[2]):3956;
 	int result;
+
+	/*
+	Sets GLib's _g_main_poll_debug to true if env G_MAIN_POLL_DEBUG is defined, under Windows;
+	that enables debugging messages from g_poll; the context is otherwise not used at all.
+	*/
+	GMainContext *ctx=g_main_context_new();
 
 	/* create GPollFD, with one address only, to be polled later */
 	GError *error=NULL;
@@ -25,7 +36,12 @@ int main(int argc, char** argv){
 	fprintf(stderr,"Bound to %s:%d\n",addr_str,listen_port);
 
 	/* poll sockets (just one, really) for 30s to receive reply */
-	result=g_poll(&fds[0],1,30000);
+	#ifdef G_OS_WIN32
+		/* call local version, copied and adjusted from glib sources */
+		result=L_g_poll(&fds[0],1,1000);
+	#else
+		result=g_poll(&fds[0],1,1000);
+	#endif
 	/* some error */
 	if(result==0){ g_critical("g_poll timed out."); exit(1); }
 	else if(result<0){ g_critical("g_poll returned %d (error or call interrupted)",result); return 1; }

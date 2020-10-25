@@ -44,7 +44,7 @@ int main(int argc,char** argv){
 	WSANETWORKEVENTS events;
 	WSAEventSelect(*m_socket,hEvent,FD_READ | FD_WRITE);
 	/* return value ignored */
-	WSAWaitForMultipleEvents(1,&hEvent,FALSE,30000,FALSE);
+	WSAWaitForMultipleEvents(1,&hEvent,FALSE,1000,FALSE);
 	while(1){
 		if(WSAEnumNetworkEvents(*m_socket,hEvent,&events) == SOCKET_ERROR) {
 			fprintf(stderr,"Error");
